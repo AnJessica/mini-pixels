@@ -64,4 +64,31 @@ void TimestampColumnVector::set(int elementNum, long ts) {
     }
     times[elementNum] = ts;
     // TODO: isNull
+    int byteIndex = elementNum / 8;
+    int bitIndex = elementNum % 8;
+    auto* isNullByte = reinterpret_cast<uint8_t*>(isNull);
+    isNullByte[byteIndex] &= ~(1 << bitIndex);  // 设置为非空
+}
+
+
+
+void TimestampColumnVector::add(void* value) {
+    long timestampValue = *(static_cast<long*>(value));  // 将 void* 转换为 long 类型
+    ensureSize(writeIndex + 1);  // 确保数组大小足够
+    times[writeIndex++] = timestampValue;  // 添加值
+}
+
+void TimestampColumnVector::ensureSize(uint64_t size) {
+    if (size > length) {
+        // 扩展数组大小，默认两倍扩展策略
+        uint64_t newSize = std::max(size, length * 2);
+        long* newTimes;
+        posix_memalign(reinterpret_cast<void**>(&newTimes), 64, newSize * sizeof(long));
+        if (times != nullptr) {
+            std::copy(times, times + writeIndex, newTimes);  // 拷贝旧数据
+            free(times);  // 释放旧内存
+        }
+        times = newTimes;
+        length = newSize;
+    }
 }

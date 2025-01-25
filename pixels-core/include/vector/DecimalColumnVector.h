@@ -21,11 +21,14 @@ public:
     DecimalColumnVector(int precision, int scale, bool encoding = false);
     DecimalColumnVector(uint64_t len, int precision, int scale, bool encoding = false);
     ~DecimalColumnVector();
+    void add(void* value) override;
     void print(int rowCount) override;
     void close() override;
     void * current() override;
 	int getPrecision();
 	int getScale();
+private:
+    void ensureSize(uint64_t size);
 };
 
 #endif //PIXELS_DECIMALCOLUMNVECTOR_H

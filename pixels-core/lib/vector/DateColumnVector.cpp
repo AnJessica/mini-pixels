@@ -58,3 +58,17 @@ void * DateColumnVector::current() {
         return dates + readIndex;
     }
 }
+void DateColumnVector::add(void* value) {
+    int days = *(static_cast<int*>(value));  // 将void* 转换为int（日期的天数）
+    ensureSize(writeIndex + 1);  // 确保空间足够
+    dates[writeIndex++] = days;
+}
+
+void DateColumnVector::ensureSize(uint64_t size) {
+    if (size > length) {
+        // 扩展日期数组大小，可以使用类似2倍扩展策略，避免频繁扩展
+        uint64_t newSize = std::max(size, length * 2);
+        posix_memalign(reinterpret_cast<void**>(&dates), 32, newSize * sizeof(int32_t));
+        length = newSize;
+    }
+}

@@ -47,6 +47,8 @@ set(pixels_core_cxx
         lib/reader/TimestampColumnReader.cpp)
 
 add_library(pixels-core ${pixels_core_cxx})
+# 包含子目录
+add_subdirectory(tests)
 
 target_link_libraries(
         pixels-core

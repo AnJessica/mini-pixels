@@ -65,4 +65,20 @@ int DecimalColumnVector::getPrecision() {
 
 int DecimalColumnVector::getScale() {
 	return scale;
+
+}
+
+void DecimalColumnVector::add(void* value) {
+    int64_t decimalValue = *(static_cast<int64_t*>(value));  // 将 void* 转换为整数（无符号整数）
+    ensureSize(writeIndex + 1);  // 确保空间足够
+    vector[writeIndex++] = decimalValue;  // 添加到 vector 中
+}
+
+void DecimalColumnVector::ensureSize(uint64_t size) {
+    if (size > length) {
+        // 扩展 decimal 数组大小，可以使用类似2倍扩展策略，避免频繁扩展
+        uint64_t newSize = std::max(size, length * 2);
+        posix_memalign(reinterpret_cast<void**>(&vector), 32, newSize * sizeof(uint64_t));  // 重新分配内存
+        length = newSize;  // 更新长度
+    }
 }

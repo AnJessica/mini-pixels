@@ -16,3 +16,26 @@ void ByteColumnVector::close() {
 		vector = nullptr;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -23,7 +23,9 @@ public:
     ~TimestampColumnVector();
     void print(int rowCount) override;
     void close() override;
+    void add(void* value) override;
 private:
     bool isLong;
+    void ensureSize(uint64_t size);  // 确保数组大小足够
 };
 #endif //DUCKDB_TIMESTAMPCOLUMNVECTOR_H

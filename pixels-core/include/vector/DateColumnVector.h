@@ -27,6 +27,9 @@ public:
 	void print(int rowCount) override;
 	void close() override;
 	void set(int elementNum, int days);
+	 void add(void* value) override;
+private:
+    void ensureSize(uint64_t size); 
 };
 
 #endif // DUCKDB_DATECOLUMNVECTOR_H
